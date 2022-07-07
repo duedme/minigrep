@@ -1,11 +1,15 @@
-use std::env;
+use std::{env, process};
+use minigrep::Config;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let query = &args[1];
-    let filename = &args[2];
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        process::exit(1);
+    });
 
-    println!("Searching for query: {}", query);
-    println!("In file: {}", filename);
+    if let Err(e) = minigrep::run(config) {
+        process::exit(1);
+    };
+
 }
